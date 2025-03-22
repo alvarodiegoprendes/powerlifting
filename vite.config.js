@@ -9,24 +9,8 @@ export default defineConfig({
         }),
     ],
     
-    build: {
-        outDir: 'public/build',
-        manifest: true,
-        rollupOptions: {
-            output: {
-                manualChunks: {
-                    vendor: ['vue', 'axios']
-                }
-            }
-        },
-        // Optimizaciones para producción
-        minify: 'terser',
-        chunkSizeWarningLimit: 1000,
-        terserOptions: {
-            compress: {
-                drop_console: true, // Elimina console.logs
-                drop_debugger: true
-            }
-        }
-    }
+    server: {
+        https: true, // Forzar HTTPS en Vite
+    },
+
 });
