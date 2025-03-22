@@ -1,0 +1,267 @@
+@extends('layouts.base')
+
+@section('title')
+    powerlifting cubano
+@endsection
+
+@section('body')
+<h3>Registrar Datos de la Competencia al atleta {{$atleta->nombre}}</h3>
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">Registrar Datos de la Competencia</h2>
+            <a href="{{ route("atleta.show", $atleta)}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Cancelar</a>
+        </div>
+        <form action="{{ route('resultado_atleta_competencia.store_parametrizada',$atleta) }}" method="POST" class="space-y-6">
+            @csrf
+            <div class="grid grid-cols-1">
+                <!-- Información de la Competencia -->
+                    <div class="pt-4">
+                        <label for="competencia_id" class="block text-sm font-medium text-gray-700">Competencia</label>
+                        <select name="competencia_id" id="competencia_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="">Selecciona una competencia</option>
+                            @foreach($competencias as $competencia)
+                                <option value="{{ $competencia->id }}">{{ $competencia->nombre_competencia }} - {{ $competencia->fecha }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="pt-4">
+                        <label for="puesto_atleta" class="block text-sm font-medium text-gray-700">Puesto</label>
+                        <input type="number" name="puesto_atleta" id="puesto_atleta" value="{{old('puesto_atleta')}}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div class="pt-4">
+                        <label for="federacion_atleta" class="block text-sm font-medium text-gray-700">Equipo del Atleta</label>
+                        <input type="text" name="federacion_atleta" id="federacion_atleta" value="{{old('federacion_atleta')}}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div class="pt-4">
+                        <label for="edad_atleta" class="block text-sm font-medium text-gray-700">Edad</label>
+                        <input type="number" name="edad_atleta" id="edad_atleta" value="{{old('edad_atleta')}}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+
+                    <div class="pt-4">
+                        <label for="peso_corporal" class="block text-sm font-medium text-gray-700">Peso Corporal</label>
+                        <input type="number" step="0.01" name="peso_corporal" id="peso_corporal" value="{{old('peso_corporal')}}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div class="pt-4">
+                        <label for="equipamiento" class="block text-sm font-medium text-gray-700">Equipamiento</label>
+                        <select name="equipamiento" id="equipamiento" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="Raw" {{old('equipamiento') == 'Raw' ? 'selected' : ''}}>Raw</option>
+                            <option value="Wraps" {{old('equipamiento') == 'Wraps' ? 'selected' : ''  }}>Wraps</option>
+                        </select>
+                    </div>
+
+                    <div class="pt-4">
+                        <label for="tipo_competencia" class="block text-sm font-medium text-gray-700">Tipo de Competencia</label>
+                        <select name="tipo_competencia" id="tipo_competencia" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="full-power" {{old('tipo_competencia') == 'full-power' ? 'selected' : ''}}>Full Power</option>
+                            <option value="push-pull" {{old('tipo_competencia') == 'push-pull' ? 'selected' : ''}}>Push-Pull</option>
+                        </select>
+                    </div>
+            </div>
+
+            <!-- Levantamientos -->
+            <div class="mt-8">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Intentos</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Squat -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Squat</label>
+                        <div class="space-y-2">
+                            <input type="number" step="0.5" name="squat_1" placeholder="1er intento" value="{{old('squat_1',0)}}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+
+                            <div class="relative flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="hidden" name="squat_1_no_valido" value="0">
+                                    <input
+                                        type="checkbox"
+                                        id="squat_1_no_valido"
+                                        name="squat_1_no_valido"
+                                        value="1" 
+                                        class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                        {{ old('squat_1_no_valido') ? 'checked' : '' }}
+                                    />
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="squat_1_no_valido" class="font-medium text-gray-700">No válido</label>
+                                </div>
+                            </div>
+
+                            <input type="number" step="0.5" name="squat_2" placeholder="2do intento" value="{{old('squat_2',0)}}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+
+                            <div class="relative flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="hidden" name="squat_2_no_valido" value="0">
+                                    <input
+                                        type="checkbox"
+                                        id="squat_2_no_valido"
+                                        name="squat_2_no_valido"
+                                        value="1" 
+                                        class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                        {{ old('squat_2_no_valido') ? 'checked' : '' }}
+                                    />
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="squat_2_no_valido" class="font-medium text-gray-700">No válido</label>
+                                </div>
+                            </div>
+
+                            <input type="number" step="0.5" name="squat_3" placeholder="3er intento" value="{{old('squat_3',0)}}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+
+                            <div class="relative flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="hidden" name="squat_3_no_valido" value="0">
+                                    <input
+                                        type="checkbox"
+                                        id="squat_3_no_valido"
+                                        name="squat_3_no_valido"
+                                        value="1" 
+                                        class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                        {{ old('squat_3_no_valido') ? 'checked' : '' }}
+                                    />
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="squat_3_no_valido" class="font-medium text-gray-700">No válido</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bench Press -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Bench Press</label>
+                        <div class="space-y-2">
+                            <input type="number" step="0.5" name="bench_press_1" placeholder="1er intento" value="{{old('bench_press_1',0)}}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+
+                            <div class="relative flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="hidden" name="bench_press_1_no_valido" value="0">
+                                    <input
+                                        type="checkbox"
+                                        id="bench_press_1_no_valido"
+                                        name="bench_press_1_no_valido"
+                                        value="1" 
+                                        class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                        {{ old('bench_press_1_no_valido') ? 'checked' : '' }}
+                                    />
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="bench_press_1_no_valido" class="font-medium text-gray-700">No válido</label>
+                                </div>
+                            </div>
+                            <input type="number" step="0.5" name="bench_press_2" placeholder="2do intento" value="{{old('bench_press_2',0)}}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+
+                            <div class="relative flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="hidden" name="bench_press_2_no_valido" value="0">
+                                    <input
+                                        type="checkbox"
+                                        id="bench_press_2_no_valido"
+                                        name="bench_press_2_no_valido"
+                                        value="1" 
+                                        class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                        {{ old('bench_press_2_no_valido') ? 'checked' : '' }}
+                                    />
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="bench_press_2_no_valido" class="font-medium text-gray-700">No válido</label>
+                                </div>
+                            </div>
+                            <input type="number" step="0.5" name="bench_press_3" placeholder="3er intento" value="{{old('bench_press_3',0)}}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+
+                            <div class="relative flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="hidden" name="bench_press_3_no_valido" value="0">
+                                    <input
+                                        type="checkbox"
+                                        id="bench_press_3_no_valido"
+                                        name="bench_press_3_no_valido"
+                                        value="1" 
+                                        class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                        {{ old('bench_press_3_no_valido') ? 'checked' : '' }}
+                                    />
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="bench_press_3_no_valido" class="font-medium text-gray-700">No válido</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Deadlift -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Deadlift</label>
+                        <div class="space-y-2">
+                            <input type="number" step="0.5" name="deadlift_1" placeholder="1er intento" value="{{old('deadlift_1',0)}}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+
+                            <div class="relative flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="hidden" name="deadlift_1_no_valido" value="0">
+                                    <input
+                                        type="checkbox"
+                                        id="deadlift_1_no_valido"
+                                        name="deadlift_1_no_valido"
+                                        value="1" 
+                                        class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                        {{ old('deadlift_1_no_valido') ? 'checked' : '' }}
+                                    />
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="deadlift_1_no_valido" class="font-medium text-gray-700">No válido</label>
+                                </div>
+                            </div>
+                            <input type="number" step="0.5" name="deadlift_2" placeholder="2do intento" value="{{old('deadlift_2',0)}}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+
+                            <div class="relative flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="hidden" name="deadlift_2_no_valido" value="0">
+                                    <input
+                                        type="checkbox"
+                                        id="deadlift_2_no_valido"
+                                        name="deadlift_2_no_valido"
+                                        value="1" 
+                                        class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                        {{ old('deadlift_2_no_valido') ? 'checked' : '' }}
+                                    />
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="deadlift_2_no_valido" class="font-medium text-gray-700">No válido</label>
+                                </div>
+                            </div>
+                            <input type="number" step="0.5" name="deadlift_3" placeholder="3er intento" value="{{old('deadlift_3',0)}}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+
+                            <div class="relative flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="hidden" name="deadlift_3_no_valido" value="0">
+                                    <input
+                                        type="checkbox"
+                                        id="deadlift_3_no_valido"
+                                        name="deadlift_3_no_valido"
+                                        value="1" 
+                                        class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                        {{ old('deadlift_3_no_valido') ? 'checked' : '' }}
+                                    />
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="deadlift_3_no_valido" class="font-medium text-gray-700">No válido</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center mt-6">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
